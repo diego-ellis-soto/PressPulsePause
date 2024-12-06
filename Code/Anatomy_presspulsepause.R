@@ -1,4 +1,3 @@
-# Disentangling the anatomy of the anthropause
 # Load the ggplot2 library
 library(ggplot2)
 
@@ -35,10 +34,30 @@ waves <- data.frame(
            rep("Pulse", length(time_fine)))
 )
 
-# Plot the waves with facet_grid
+# Define annotations
+annotations <- data.frame(
+  x = c(5, 3, 7, 1, 5),  # X-coordinates for annotations
+  y = c(0.125, 0.15, 0.2, 1, 1),  # Y-coordinates for annotations
+  label = c(
+    "Press: Gradual increase in mean temperature",
+    "Pause: Recovery oscillation (shorter)",
+    "Pause: Recovery oscillation (longer)",
+    "Pulse: Extreme disturbance (short spike)",
+    "Pulse: Extreme disturbance (sharp spike)"
+  ),
+  Type = c("Press", "Pause", "Pause", "Pulse", "Pulse")  # Corresponding panels
+)
+
+# Plot the waves with facet_grid and annotations
 ggplot(waves, aes(x = Time, y = Amplitude, color = Type)) +
   geom_line(size = 1) +
   facet_grid(Type ~ ., scales = "free_y", switch = "y") +  # Allow each panel to have its own y-scale
+  geom_text(data = annotations, aes(x = x, y = y, label = label),
+            inherit.aes = FALSE, hjust = 0, size = 4, fontface = "bold") +  # Add text annotations
+  geom_segment(aes(x = 2.5, xend = 3.5, y = -0.6, yend = 0.15), 
+               inherit.aes = FALSE, color = "blue", linetype = "dotted", size = 0.7) + # Annotate duration
+  geom_segment(aes(x = 6.5, xend = 8.0, y = -0.9, yend = 0.15), 
+               inherit.aes = FALSE, color = "blue", linetype = "dotted", size = 0.7) + # Annotate duration
   labs(
     title = "Presses, Pauses, and Pulses in the Anthropocene",
     x = "Time",
@@ -56,4 +75,4 @@ ggplot(waves, aes(x = Time, y = Amplitude, color = Type)) +
     legend.position = "none"                              # Remove legend
   ) +
   scale_x_continuous(breaks = seq(0, 10, by = 1)) +       # Increase x-axis tick density
-  scale_y_continuous(expand = expansion(mult = c(0.1, 0.1)))+ylim(-1,1)  # Ensure space for positive/negative values
+  scale_y_continuous(expand = expansion(mult = c(0.1, 0.1))) + ylim(-1, 1)  # Ensure space for positive/negative values
