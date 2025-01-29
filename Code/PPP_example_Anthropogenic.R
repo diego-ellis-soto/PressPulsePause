@@ -1,12 +1,12 @@
-# Replace CO2 emissions with something population related? Use WDIsearch() to find the right one with grepl unless you know some 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 # Replace population numbers with human footprint?
-
 # Please revise the mobiltiy plot:
 
-
-library(tidyverse)      # Includes dplyr, ggplot2, etc.
-library(WDI)            # For World Bank data (CO2 emissions)
+library(tidyverse)
+library(WDI)      
 library(tidycovid19)    # For Google Mobility & Oxford COVID-19 data
 library(lubridate)      # For date manipulations
 library(cowplot)        # For arranging multiple plots
@@ -16,13 +16,6 @@ library(WDI)
 # 1. Increase in Human Population (Press) ---------------------------------------
 
 # 2A. Download global population data from 1980 to 2021
-pop_data <- WDI(
-  country = "1W",            # 1W = world
-  indicator = "SP.POP.TOTL", # total population
-  start = 1980,
-  end   = 2021
-)
-
 pop_data <- WDI(
   country = "1W",            # 1W = world. # UY
   indicator = "SP.POP.TOTL", # total population
@@ -258,3 +251,97 @@ mobility_plot <- ggplot(google_arg, aes(x = date, y = retail_and_recreation_perc
     legend.position = "top"
   )
 
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Change in HFI through time
+# Make Insets
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+require(terra)
+library(sf)
+library(ggplot2)
+library(cowplot)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+a = raster('/Users/diegoellis/Downloads/hfp2000.tif')
+Stack = rast(a)
+terra::global(Stack, "mean", na.rm=TRUE)
+# Chage in mean human footprint across countries?
+# Or make stimuli across all geographic variaiton|
+
+# Obtain world country data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Define the countries for insets
+inset_countries <- c("Brazil", "Australia", "India", "South Africa")
+
+# Extract the selected countries
+countries_sf <- world[world$name %in% inset_countries, ]
+# countries_sf |> st_transform(st_crs(Stack)) # |> mapview()
+
+countries_sf_tmp = raster::extract(raster(Stack), countries_sf)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# countries_sf_hfp = countries_sf |> 
+#   st_intersection() # |> terra::global("mean", na.rm=TRUE)
+# 
+# # Assign each country to a list for easier handling
+# countries_list <- split(countries_sf, countries_sf$name)
+# 
+# # Create the global base map
+# global_map <- ggplot(data = world) +
+#   geom_sf(fill = "antiquewhite") +
+#   theme_minimal() +
+#   theme(
+#     panel.background = element_rect(fill = "lightblue"),
+#     panel.grid = element_line(color = "gray70")
+#   ) +
+#   labs(title = "Global Map with Country Insets",
+#        subtitle = "Showing Selected Countries with Mean Values")
+# 
+# create_inset <- function(country_sf, main_map_extent) {
+#   ggplot(data = country_sf) +
+#     geom_sf(fill = "black") +
+#     theme_void() +
+#     theme(panel.border = element_rect(color = "black", fill=NA, size=0.5))
+# }
+# 
+# inset_plots <- lapply(countries_list, create_inset)
+# 
+# # Check CRS of raster and vector data
+# raster_crs <- crs(Stack)
+# vector_crs <- st_crs(world)$proj4string
+# 
+# # If they differ, transform the vector data to match raster CRS
+# if (raster_crs != vector_crs) {
+#   countries_sf <- st_transform(countries_sf, crs = raster_crs)
+# }
+# 
