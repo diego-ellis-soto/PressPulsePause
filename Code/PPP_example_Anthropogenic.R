@@ -1,3 +1,9 @@
+# https://zenodo.org/records/4935069
+# https://figshare.com/articles/figure/An_annual_global_terrestrial_Human_Footprint_dataset_from_2000_to_2018/16571064
+# https://www.nature.com/articles/ncomms12558
+# https://ourworldindata.org/urbanization
+# https://ourworldindata.org/urbanization
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
